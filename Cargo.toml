@@ -4,7 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-tokio = {version = "1.17.0", features = ["full"]}
-reqwest = {version = "0.11.10", features = ["cookie_store", "cookies"]}
+tokio = {version = "1.17.0", features = ["full", "time"]}
+reqwest = {version = "0.11.10", features = ["cookie_store", "cookies", "multipart"]}
 futures = "0.3.21"
 scraper = "0.12.0"
+serde = "1.0.136"
+csv = "1.1"

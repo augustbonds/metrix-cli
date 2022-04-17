@@ -1,0 +1,66 @@
+use serde::Deserialize;
+
+macro_rules! pub_struct {
+    ($name:ident {$($field:ident: $t:ty,)*}) => {
+        #[derive(Debug, Clone, PartialEq, Deserialize)] // ewww
+        pub struct $name {
+            $(pub $field: $t),*
+        }
+    }
+}
+
+pub_struct!(UDiscScorecard {
+    player_name: String,
+    course_name: String,
+    layout_name: String,
+    date: String,
+    total: u32,
+    plus_minus: Option<i32>,
+    hole1: Option<u32>,
+    hole2: Option<u32>,
+    hole3: Option<u32>,
+    hole4: Option<u32>,
+    hole5: Option<u32>,
+    hole6: Option<u32>,
+    hole7: Option<u32>,
+    hole8: Option<u32>,
+    hole9: Option<u32>,
+    hole10: Option<u32>,
+    hole11: Option<u32>,
+    hole12: Option<u32>,
+    hole13: Option<u32>,
+    hole14: Option<u32>,
+    hole15: Option<u32>,
+    hole16: Option<u32>,
+    hole17: Option<u32>,
+    hole18: Option<u32>,
+});
+
+pub fn parse_scorecards(path: &str) -> Vec<UDiscScorecard> {
+    let mut reader = csv::Reader::from_path(path).unwrap();
+    let mut scorecards : Vec<UDiscScorecard> = Vec::new();
+    for result in reader.deserialize() {
+        scorecards.push(result.unwrap());
+    }
+    scorecards
+}
+
+pub trait FrontNine {
+    fn front_nine(&self) -> [u32;9];
+}
+
+impl FrontNine for UDiscScorecard {
+    fn front_nine(&self) -> [u32; 9] {
+        let mut scores = [0;9];
+        scores[0] = self.hole1.unwrap_or(0);
+        scores[1] = self.hole2.unwrap_or(0);
+        scores[2] = self.hole3.unwrap_or(0);
+        scores[3] = self.hole4.unwrap_or(0);
+        scores[4] = self.hole5.unwrap_or(0);
+        scores[5] = self.hole6.unwrap_or(0);
+        scores[6] = self.hole7.unwrap_or(0);
+        scores[7] = self.hole8.unwrap_or(0);
+        scores[8] = self.hole9.unwrap_or(0);
+        scores
+    }
+}
