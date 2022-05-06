@@ -147,17 +147,3 @@ fn parse_competitions(xml : &str) -> Vec<Competition> {
 
     vec
 }
-
-#[cfg(test)]
-mod tests {
-    use crate::competitions;
-
-    #[test]
-    fn it_works() {
-        let infile_name = "src/competitions.html";
-        let xml = std::fs::read_to_string(infile_name).expect("Failed to read {}");
-
-        let vec = competitions::parse_competitions(&xml);
-        assert_eq!(vec.len(), 78);
-    }
-}
