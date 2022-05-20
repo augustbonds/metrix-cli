@@ -1,6 +1,7 @@
 use futures::executor::block_on;
 use reqwest::{Client, multipart, Response};
 use scraper::{Html, Selector};
+use crate::courses;
 
 //time: 15:16
 //date: 2022-01-22
@@ -14,7 +15,8 @@ pub fn log_training(client: &Client, course_name: &str, time: &str, date: &str, 
 
 async fn start_training(client: &Client, course_name: &str) -> String {
     let url = "https://discgolfmetrix.com/?u=competition_add";
-    let course_id = get_course_id(course_name);
+    let course_id = courses::get_course_id(course_name).unwrap();
+
     if course_id == "" {
         return String::new()
     }
@@ -32,15 +34,7 @@ async fn start_training(client: &Client, course_name: &str) -> String {
     return String::new()
 }
 
-fn get_course_id(course_name: &str) -> &'static str {
-    match course_name {
-        "LC Mariehamn DiscGolfPark" => "15904",
-        "Vesterkalmare" => "23647",
-        "Stallhagen DiscGolfPark" => "19351",
-        "Kastelholm DiscGolfPark" => "19757",
-        _ => ""
-    }
-}
+
 
 async fn edit_start_time(client: &Client, competition_id: &str, time: &str, date: &str) {
     let form = multipart::Form::new()
@@ -105,10 +99,10 @@ async fn enter_scorecard(client: &Client, competition_id: &str, scores: [u32;9])
     for score in scores {
         score_data.push(("score[]".to_string(), score.to_string()));
     }
-    for i in 1..9 {
+    for _ in 1..9 {
         score_data.push(("icp[]".to_string(), "".to_string()));
     }
-    for i in 1..9 {
+    for _ in 1..9 {
         score_data.push(("penalties[]".to_string(), "".to_string()));
     }
     score_data.push(("ActionSave".to_string(), "Save".to_string()));

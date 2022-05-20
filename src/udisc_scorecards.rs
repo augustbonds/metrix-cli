@@ -1,40 +1,32 @@
 use serde::Deserialize;
 
-macro_rules! pub_struct {
-    ($name:ident {$($field:ident: $t:ty,)*}) => {
-        #[derive(Debug, Clone, PartialEq, Deserialize)] // ewww
-        pub struct $name {
-            $(pub $field: $t),*
-        }
-    }
+#[derive(Debug, Clone, PartialEq, Deserialize)]
+pub struct UDiscScorecard {
+    pub player_name: String,
+    pub course_name: String,
+    pub layout_name: String,
+    pub date: String,
+    pub total: u32,
+    pub plus_minus: Option<i32>,
+    pub hole1: Option<u32>,
+    pub hole2: Option<u32>,
+    pub hole3: Option<u32>,
+    pub hole4: Option<u32>,
+    pub hole5: Option<u32>,
+    pub hole6: Option<u32>,
+    pub hole7: Option<u32>,
+    pub hole8: Option<u32>,
+    pub hole9: Option<u32>,
+    pub hole10: Option<u32>,
+    pub hole11: Option<u32>,
+    pub hole12: Option<u32>,
+    pub hole13: Option<u32>,
+    pub hole14: Option<u32>,
+    pub hole15: Option<u32>,
+    pub hole16: Option<u32>,
+    pub hole17: Option<u32>,
+    pub hole18: Option<u32>,
 }
-
-pub_struct!(UDiscScorecard {
-    player_name: String,
-    course_name: String,
-    layout_name: String,
-    date: String,
-    total: u32,
-    plus_minus: Option<i32>,
-    hole1: Option<u32>,
-    hole2: Option<u32>,
-    hole3: Option<u32>,
-    hole4: Option<u32>,
-    hole5: Option<u32>,
-    hole6: Option<u32>,
-    hole7: Option<u32>,
-    hole8: Option<u32>,
-    hole9: Option<u32>,
-    hole10: Option<u32>,
-    hole11: Option<u32>,
-    hole12: Option<u32>,
-    hole13: Option<u32>,
-    hole14: Option<u32>,
-    hole15: Option<u32>,
-    hole16: Option<u32>,
-    hole17: Option<u32>,
-    hole18: Option<u32>,
-});
 
 pub fn parse_scorecards(path: &str) -> Vec<UDiscScorecard> {
     let mut reader = csv::Reader::from_path(path).unwrap();
