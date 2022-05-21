@@ -3,5 +3,7 @@
 ✔ edit start time @done(22-04-16 09:44)
 ✔ enter scores @done(22-04-16 09:44)
 
-☐ Do complete flow from input
-☐ Modify course input dynamically
+questions for metrix:
+    ☐ What's the rate limit for uploading scorecards?
+        My current setup is 2 sec delay between insertions
+    ☐ Can I get a complete mapping of finnish udisc courses to metrix ids (layouts?)

@@ -1,7 +1,10 @@
 use serde::Deserialize;
 
+
 #[derive(Debug, Clone, PartialEq, Deserialize)]
 pub struct UDiscScorecard {
+    // TODO can I just skip the header when deserializing?
+    // currently it complains if the column names aren't identical to the struct fields.
     pub player_name: String,
     pub course_name: String,
     pub layout_name: String,
