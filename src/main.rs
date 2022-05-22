@@ -50,8 +50,8 @@ async fn main() {
         if scorecard.player_name == "Gerblion" {
             let get_metrix_id = courses::get_course_id(&scorecard.course_name);
             match get_metrix_id {
-                Ok(_) => log_scorecard(&client, &scorecard).await,
-                Err(_) => ()
+                Some(_) => log_scorecard(&client, &scorecard).await,
+                None => ()
             }
         }
     }
