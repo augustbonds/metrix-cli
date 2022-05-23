@@ -1,3 +1,5 @@
+use csv::StringRecord;
+use futures::StreamExt;
 use serde::Deserialize;
 
 
@@ -33,11 +35,36 @@ pub struct UDiscScorecard {
 
 pub fn parse_scorecards(path: &str) -> Vec<UDiscScorecard> {
     let mut reader = csv::Reader::from_path(path).unwrap();
+    let headers = reader.headers().unwrap();
+    let corrected_udisc_headers = correct_udisc_headers(headers);
+    reader.set_headers(corrected_udisc_headers);
+
     let mut scorecards : Vec<UDiscScorecard> = Vec::new();
     for result in reader.deserialize() {
-        scorecards.push(result.unwrap());
+        match result {
+            Ok(scorecard) => scorecards.push(scorecard),
+            Err(e) => {
+                eprintln!("Failed to read scorecard: {}", e);
+                std::process::exit(-1);
+            }
+        }
     }
     scorecards
+}
+
+fn correct_udisc_headers(p0: &StringRecord) -> StringRecord {
+    p0.iter().map(|sr|{
+        match sr {
+            "PlayerName" => "player_name".to_owned(),
+            "CourseName" => "course_name".to_owned(),
+            "LayoutName" => "layout_name".to_owned(),
+            "Date" => "date".to_owned(),
+            "Total" => "total".to_owned(),
+            "+/-" => "plus_minus".to_owned(),
+            s if s.contains("Hole") => s.to_lowercase(),
+            s => s.to_owned()
+        }
+    }).collect()
 }
 
 pub trait FrontNine {
