@@ -16,7 +16,8 @@
 ✔ Add path to password file via command line options @done(22-05-23 11:45)
 ☐ check password file present
 ✔ Add option to specify name of player in csv-file @done(22-05-23 11:46)
-
+☐ Check layout as well as course name
+☐ Add option for 18 hole courses
 ☐ Add option to limit input to n entries
 ✔ Add option to skip n entries @done(22-05-23 11:46)
 ✔ Dry run @done(22-05-23 11:46)

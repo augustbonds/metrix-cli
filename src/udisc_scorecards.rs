@@ -5,8 +5,6 @@ use serde::Deserialize;
 
 #[derive(Debug, Clone, PartialEq, Deserialize)]
 pub struct UDiscScorecard {
-    // TODO can I just skip the header when deserializing?
-    // currently it complains if the column names aren't identical to the struct fields.
     pub player_name: String,
     pub course_name: String,
     pub layout_name: String,
@@ -35,6 +33,9 @@ pub struct UDiscScorecard {
 
 pub fn parse_scorecards(path: &str) -> Vec<UDiscScorecard> {
     let mut reader = csv::Reader::from_path(path).unwrap();
+
+    // Headers that do not match fields in the struct will cause an exception
+    // We modify the headers in the file to match what the struct expects.
     let headers = reader.headers().unwrap();
     let corrected_udisc_headers = correct_udisc_headers(headers);
     reader.set_headers(corrected_udisc_headers);
