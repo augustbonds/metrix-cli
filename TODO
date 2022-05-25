@@ -3,21 +3,21 @@
 ✔ edit start time @done(22-04-16 09:44)
 ✔ enter scores @done(22-04-16 09:44)
 
-☐ add mapping for new courses:
-    ☐ Svinö
-    ☐ Vesterkalmare (old layout)
-    ☐ Skag (18)
-    ☐ Föglö
-    ☐ Käringsund
-    ☐ Soltuna
-    ☐ Sottuna (18)
+✔ add mapping for new courses: @done(22-05-25 13:45)
+    ✔ Svinö @done(22-05-25 13:45)
+    ✔ Vesterkalmare (old layout) @done(22-05-25 13:45)
+    ✔ Skag (18) @done(22-05-25 13:45)
+    ✔ Föglö @done(22-05-25 13:45)
+    ✔ Käringsund @done(22-05-25 13:45)
+    ✔ Soltuna @done(22-05-25 13:45)
+    ✔ Sottuna (18) @done(22-05-25 13:45)
 ✔ Add path to csv-file via command line options @done(22-05-23 11:45)
 ☐ Check csv-file present
 ✔ Add path to password file via command line options @done(22-05-23 11:45)
 ☐ check password file present
 ✔ Add option to specify name of player in csv-file @done(22-05-23 11:46)
-☐ Check layout as well as course name
-☐ Add option for 18 hole courses
+✔ Check layout as well as course name @done(22-05-25 13:45)
+✔ Add option for 18 hole courses @done(22-05-25 13:45)
 ☐ Add option to limit input to n entries
 ✔ Add option to skip n entries @done(22-05-23 11:46)
 ✔ Dry run @done(22-05-23 11:46)
@@ -25,7 +25,7 @@
 
 ☐ Build binary for windows
 ☐ Improve logging output when insertion happens, or an error occurs.
-☐ Ignore header/configure header code correctly in UDISc Scorecard Reader. Skipping header is better.
+☐ Ignore header/configure header code correctly in UDISc Scorecard Reader. Skipping header is better. @done(22-05-25 13:45)
 
 questions for metrix:
     ☐ What's the rate limit for uploading scorecards?

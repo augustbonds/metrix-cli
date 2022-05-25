@@ -94,13 +94,13 @@ async fn main() {
     println!("Skipping {} first scorecards", args.skip);
 
     for scorecard in slice {
-        let get_metrix_id = courses::get_course_id(&scorecard.course_name);
+        let get_metrix_id = courses::get_course_id(&scorecard.course_name, &scorecard.layout_name);
         match get_metrix_id {
-            Some(_) => {
+            Some((num_tees, id)) => {
                 if args.dry_run {
                     println!("DRY: imported scorecard {:?}", &scorecard);
                 } else {
-                    log_scorecard(&client, &scorecard).await
+                    log_scorecard(&client, &scorecard, num_tees, id).await
                 }
             }
             None => {println!("Skipped {:?}", &scorecard);}
@@ -108,10 +108,9 @@ async fn main() {
     }
 }
 
-async fn log_scorecard(client: &Client, scorecard: &UDiscScorecard) {
-    println!("About to log training");
+async fn log_scorecard(client: &Client, scorecard: &UDiscScorecard, num_tees: usize, metrix_id: &str) {
     let split: Vec<&str> = scorecard.date.split(' ').collect();
-    competitions::log_training(&client, &scorecard.course_name, split[1], split[0], scorecard.front_nine());
+    competitions::log_training(&client, &scorecard, metrix_id, num_tees, split[1], split[0], );
     time::sleep(Duration::from_secs(2)).await;
     println!("Logged training: {:?}", scorecard);
 }

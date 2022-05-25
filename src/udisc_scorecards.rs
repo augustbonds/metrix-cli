@@ -72,6 +72,10 @@ pub trait FrontNine {
     fn front_nine(&self) -> [u32;9];
 }
 
+pub trait EighteenHoles {
+    fn eighteen(&self) -> [u32; 18];
+}
+
 impl FrontNine for UDiscScorecard {
     fn front_nine(&self) -> [u32; 9] {
         let mut scores = [0;9];
@@ -84,6 +88,31 @@ impl FrontNine for UDiscScorecard {
         scores[6] = self.hole7.unwrap_or(0);
         scores[7] = self.hole8.unwrap_or(0);
         scores[8] = self.hole9.unwrap_or(0);
+        scores
+    }
+}
+
+impl EighteenHoles for UDiscScorecard {
+    fn eighteen(&self) -> [u32; 18] {
+        let mut scores = [0;18];
+        scores[0] = self.hole1.unwrap_or(0);
+        scores[1] = self.hole2.unwrap_or(0);
+        scores[2] = self.hole3.unwrap_or(0);
+        scores[3] = self.hole4.unwrap_or(0);
+        scores[4] = self.hole5.unwrap_or(0);
+        scores[5] = self.hole6.unwrap_or(0);
+        scores[6] = self.hole7.unwrap_or(0);
+        scores[7] = self.hole8.unwrap_or(0);
+        scores[8] = self.hole9.unwrap_or(0);
+        scores[9] = self.hole10.unwrap_or(0);
+        scores[10] = self.hole11.unwrap_or(0);
+        scores[11] = self.hole12.unwrap_or(0);
+        scores[12] = self.hole13.unwrap_or(0);
+        scores[13] = self.hole14.unwrap_or(0);
+        scores[14] = self.hole15.unwrap_or(0);
+        scores[15] = self.hole16.unwrap_or(0);
+        scores[16] = self.hole17.unwrap_or(0);
+        scores[17] = self.hole18.unwrap_or(0);
         scores
     }
 }
