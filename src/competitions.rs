@@ -10,30 +10,39 @@ use crate::udisc_scorecards::EighteenHoles;
 //competitions::log_training(&client, &scorecard, metrix_id, num_tees, split[1], split[0], );
 pub fn log_training(client: &Client, scorecard: &UDiscScorecard, metrix_id: &str, num_tees: usize, time: &str, date: &str) {
     let competition_id = block_on(start_training(&client, metrix_id));
-    block_on(edit_start_time(&client, &competition_id, time, date));
-    match num_tees {
-        9 => block_on(enter_scorecard(&client, &competition_id, scorecard.front_nine().to_vec())),
-        18 => block_on(enter_scorecard(&client, &competition_id, scorecard.eighteen().to_vec())),
-        _ => ()
+    match competition_id {
+        Ok(id) =>  {
+            block_on(edit_start_time(&client, &id, time, date));
+            match num_tees {
+                9 => block_on(enter_scorecard(&client, &id, scorecard.front_nine().to_vec())),
+                18 => block_on(enter_scorecard(&client, &id, scorecard.eighteen().to_vec())),
+                _ => ()
+            }
+            block_on(reqwest::get("https://discgolfmetrix.com/".to_string() + &id));
+        }
+        Err(_) =>{ eprintln!("Failed to start training..."); std::process::exit(-1)}
     }
-    block_on(reqwest::get("https://discgolfmetrix.com/".to_string() + &competition_id));
 }
 
-async fn start_training(client: &Client, course_id: &str) -> String {
+pub struct Error {
+
+}
+
+async fn start_training(client: &Client, course_id: &str) -> Result<String, Error> {
     let url = "https://discgolfmetrix.com/?u=competition_add";
 
     let response = client.get(url)
         .query(&[("courseid", course_id), ("create_training", "1"), ("competition_type", "1"), ("record_type", "2")])
         .send().await;
     let res_url = response.unwrap().url().clone();
-    //println!("{}", res_url);
+    println!("Start Training Response URL: {}", res_url);
 
     for pair in res_url.query_pairs(){
         if pair.0 == "ID" {
-            return pair.1.to_string()
+            return Ok(pair.1.to_string())
         }
     }
-    return String::new()
+    Err(Error {})
 }
 
 
@@ -61,8 +70,8 @@ async fn edit_start_time(client: &Client, competition_id: &str, time: &str, date
     let url = "https://discgolfmetrix.com/?u=competition_edit";
     let response = client.post(url)
         .query(&[("ID", competition_id)])
-        .multipart(form).send().await;
-    //println!("{}", response.unwrap().url())
+        .multipart(form).send().await.unwrap();
+    println!("{}", response.url())
 }
 
 async fn get_scorecard_id(client: &Client, competition_id: &str) -> String {
@@ -76,7 +85,7 @@ async fn get_scorecard_id(client: &Client, competition_id: &str) -> String {
     let html = Html::parse_document(&response.text().await.unwrap());
     let selector = Selector::parse("input[name=scorecard_id\\[\\]]").unwrap();
     let scorecard_id = html.select(&selector).next().unwrap().value().attr("value").unwrap().to_string();
-    //println!("{}", scorecard_id);
+    println!("{}", scorecard_id);
     scorecard_id
 }
 
@@ -85,13 +94,15 @@ async fn enter_scorecard(client: &Client, competition_id: &str, scores: Vec<u32>
     let scorecard_id = get_scorecard_id(client, competition_id).await;
 
     let mut score_data:Vec<(String, String)> = Vec::new();
+
     score_data.push(("tee_count".to_string(), scores.len().to_string()));
+    //score_data.push(("tee_count".to_string(), "9".to_string()));
     score_data.push(("competitor_count".to_string(), "1".to_string()));
     score_data.push(("metrix_mode".to_string(), "2".to_string()));
-    score_data.push(("scorecard_id[]".to_string(), scorecard_id));
     for tee_no in 0..scores.len() {
-        score_data.push(("tee_no[]".to_string(), tee_no.to_string()));
+        score_data.push(("tee_no[]".to_string(), (tee_no+1).to_string()));
     }
+    score_data.push(("scorecard_id[]".to_string(), scorecard_id));
     for score in &scores {
         score_data.push(("score[]".to_string(), score.to_string()));
     }

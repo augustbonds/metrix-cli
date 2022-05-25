@@ -7,6 +7,7 @@ use reqwest::{Client, Error, Response};
 use futures::executor::block_on;
 use tokio::time;
 use clap::Parser;
+use scraper::{Html, Selector};
 use crate::udisc_scorecards::{FrontNine, UDiscScorecard};
 
 async fn login(client: &Client, username: &str, password: &str) -> Result<Response, Error> {
@@ -18,7 +19,7 @@ async fn login(client: &Client, username: &str, password: &str) -> Result<Respon
 
 fn read_password_from_file(path: &String) -> Vec<String> {
     let password_file_contents = std::fs::read_to_string(path).expect("Something went wrong");
-    password_file_contents.split("\n").map(|s| s.to_string()).collect::<Vec<String>>()
+    password_file_contents.split("\r\n").map(|s| s.to_string()).collect::<Vec<String>>()
 }
 
 ///Import your UDisc scores to discgolfmetrix
@@ -72,7 +73,17 @@ async fn main() {
     if !args.dry_run {
       let login_result = block_on(login(&client, &user_pass[0], &user_pass[1]));
         match login_result {
-            Ok(_) => (),
+            Ok(response) => {
+                let html = Html::parse_document(&response.text().await.unwrap());
+                let selector = Selector::parse("div .message-error").unwrap();
+                match html.select(&selector).next() {
+                    Some(_) => {
+                        eprintln!("Failed to log in to discgolfmetrix. Do you have a working internet connection and did you provide the correct username/password?");
+                        std::process::exit(-1);
+                    }
+                    None => ()
+                }
+            },
             Err(_) => {
                 eprintln!("Failed to log in to discgolfmetrix. Do you have a working internet connection and did you provide the correct username/password?");
                 std::process::exit(-1);
@@ -90,9 +101,12 @@ async fn main() {
 
     println!("{} scorecards matching player {}", filtered_by_player.len(), args.player_name);
 
-    let slice = &filtered_by_player[args.skip..];
+    let mut slice = &filtered_by_player[args.skip..];
     println!("Skipping {} first scorecards", args.skip);
 
+    if args.limit != 0 {
+        slice = &slice[..args.limit];
+    }
     for scorecard in slice {
         let get_metrix_id = courses::get_course_id(&scorecard.course_name, &scorecard.layout_name);
         match get_metrix_id {
