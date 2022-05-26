@@ -2,6 +2,8 @@ mod competitions;
 mod udisc_scorecards;
 mod courses;
 
+use std::fs::File;
+use std::io::{BufRead, BufReader};
 use std::time::Duration;
 use reqwest::{Client, Error, Response};
 use futures::executor::block_on;
@@ -17,9 +19,33 @@ async fn login(client: &Client, username: &str, password: &str) -> Result<Respon
         .send().await
 }
 
-fn read_password_from_file(path: &String) -> Vec<String> {
-    let password_file_contents = std::fs::read_to_string(path).expect("Something went wrong");
-    password_file_contents.split("\r\n").map(|s| s.to_string()).collect::<Vec<String>>()
+struct MetrixCredentials {
+    username: String,
+    password: String,
+}
+
+fn read_password_from_file(path: &String) -> MetrixCredentials {
+    let fopen = File::open(path);
+    match fopen {
+        Ok(file) => {
+            let reader = BufReader::new(file);
+            let mut username: String = String::new();
+            let mut password: String = String::new();
+            for (i, x)  in reader.lines().enumerate() {
+                match i {
+                    0 => username = x.unwrap(),
+                    1 => password = x.unwrap(),
+                    _ => ()
+                }
+            }
+            return MetrixCredentials {username, password}
+
+        }
+        Err(_) => {
+            eprintln!("Could not open password file {}", path);
+            std::process::exit(-1);
+        }
+    }
 }
 
 ///Import your UDisc scores to discgolfmetrix
@@ -71,7 +97,7 @@ async fn main() {
         .build().unwrap();
     // Login to metrix
     if !args.dry_run {
-      let login_result = block_on(login(&client, &user_pass[0], &user_pass[1]));
+      let login_result = block_on(login(&client, &user_pass.username, &user_pass.password));
         match login_result {
             Ok(response) => {
                 let html = Html::parse_document(&response.text().await.unwrap());

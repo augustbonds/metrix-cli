@@ -21,11 +21,11 @@
 ✔ Dry run @done(22-05-23 11:46)
 ☐ Ignore header/configure header code correctly in UDISc Scorecard Reader. Skipping header is better. @done(22-05-25 13:45)
 ✔ Build binary for windows @done(22-05-26 01:04)
+✔ handle newline differently depending on platform (password file) @done(22-05-26 10:57)
+✔ check password file present @done(22-05-26 10:57)
 
 
 ☐ Check csv-file present
-☐ check password file present
-☐ handle newline differently depending on platform (password file)
 ☐ remove unnecessary printouts
 ☐ Improve logging output when insertion happens, or an error occurs.
 
