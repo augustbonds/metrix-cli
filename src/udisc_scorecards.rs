@@ -1,7 +1,5 @@
 use csv::StringRecord;
-use futures::StreamExt;
 use serde::Deserialize;
-
 
 #[derive(Debug, Clone, PartialEq, Deserialize)]
 pub struct UDiscScorecard {

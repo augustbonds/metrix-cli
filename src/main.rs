@@ -92,7 +92,7 @@ async fn main() {
     // Import metrix credentials
     let user_pass = read_password_from_file(&args.password_file);
 
-    let client = reqwest::Client::builder()
+    let client = Client::builder()
         .cookie_store(true)
         .build().unwrap();
     // Login to metrix
@@ -150,7 +150,7 @@ async fn main() {
 
 async fn log_scorecard(client: &Client, scorecard: &UDiscScorecard, num_tees: usize, metrix_id: &str) {
     let split: Vec<&str> = scorecard.date.split(' ').collect();
-    competitions::log_training(&client, &scorecard, metrix_id, num_tees, split[1], split[0], );
-    time::sleep(Duration::from_secs(2)).await;
+    competitions::log_training(&client, &scorecard, metrix_id, num_tees, split[1], split[0]);
+    time::sleep(Duration::from_secs(4)).await;
     println!("Logged training: {:?}", scorecard);
 }

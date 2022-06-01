@@ -1,4 +1,3 @@
-//TODO eventually all aland courses and all layouts
 pub fn get_course_id(course_name: &str, layout_name: &str) -> Option<(usize, &'static str)> {
     match (course_name, layout_name) {
         ("LC Mariehamn DiscGolfPark", "LC Mariehamn") => Some((9,"15904")),
