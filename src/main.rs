@@ -34,8 +34,8 @@ fn read_password_from_file(path: &String) -> MetrixCredentials {
             let mut password: String = String::new();
             for (i, x)  in reader.lines().enumerate() {
                 match i {
-                    0 => username = x.unwrap(),
-                    1 => password = x.unwrap(),
+                    0 => username = x.unwrap().trim().to_owned(),
+                    1 => password = x.unwrap().trim().to_owned(),
                     _ => ()
                 }
             }
