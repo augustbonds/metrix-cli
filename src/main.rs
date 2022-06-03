@@ -121,14 +121,15 @@ async fn main() {
     // Read scorecards from csv
     let scorecards = udisc_scorecards::parse_scorecards(&args.udisc_csv);
     let filtered_by_player: Vec<UDiscScorecard> = scorecards.into_iter().filter(|scorecard| scorecard.player_name == args.player_name).collect();
+    let filtered_by_aland_courses: Vec<UDiscScorecard> = filtered_by_player.into_iter().filter(|scorecard| get_course_id(&scorecard.course_name, &scorecard.layout_name) != None).collect();
 
-    if args.skip > filtered_by_player.len() {
-        eprintln!("Trying to skip {} scorecards when there are only {} scorecards matching player {}", args.skip, filtered_by_player.len(), args.player_name)
+    if args.skip > filtered_by_aland_courses.len() {
+        eprintln!("Trying to skip {} scorecards when there are only {} scorecards matching player {}", args.skip, filtered_by_aland_courses.len(), args.player_name)
     }
 
-    println!("{} scorecards matching player {}", filtered_by_player.len(), args.player_name);
+    println!("{} scorecards to insert for player {}", filtered_by_aland_courses.len(), args.player_name);
 
-    let mut slice = &filtered_by_player[args.skip..];
+    let mut slice = &filtered_by_aland_courses[args.skip..];
     println!("Skipping {} first scorecards", args.skip);
 
     if args.limit != 0 {
