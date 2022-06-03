@@ -10,6 +10,7 @@ use futures::executor::block_on;
 use tokio::time;
 use clap::Parser;
 use scraper::{Html, Selector};
+use crate::courses::get_course_id;
 use crate::udisc_scorecards::{FrontNine, UDiscScorecard};
 
 async fn login(client: &Client, username: &str, password: &str) -> Result<Response, Error> {
@@ -134,7 +135,7 @@ async fn main() {
         slice = &slice[..args.limit];
     }
     for scorecard in slice {
-        let get_metrix_id = courses::get_course_id(&scorecard.course_name, &scorecard.layout_name);
+        let get_metrix_id = get_course_id(&scorecard.course_name, &scorecard.layout_name);
         match get_metrix_id {
             Some((num_tees, id)) => {
                 if args.dry_run {
