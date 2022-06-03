@@ -105,14 +105,14 @@ async fn main() {
                 let selector = Selector::parse("div .message-error").unwrap();
                 match html.select(&selector).next() {
                     Some(_) => {
-                        eprintln!("Failed to log in to discgolfmetrix. Do you have a working internet connection and did you provide the correct username/password?");
+                        eprintln!("(1)Failed to log in to discgolfmetrix. Do you have a working internet connection and did you provide the correct username/password?");
                         std::process::exit(-1);
                     }
                     None => ()
                 }
             },
             Err(_) => {
-                eprintln!("Failed to log in to discgolfmetrix. Do you have a working internet connection and did you provide the correct username/password?");
+                eprintln!("(2)Failed to log in to discgolfmetrix. Do you have a working internet connection and did you provide the correct username/password?");
                 std::process::exit(-1);
             }
         }
