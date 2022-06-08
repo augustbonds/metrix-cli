@@ -1,28 +1,34 @@
-1. Skapa en textfil med två rader: ditt användarnamn till metrix, och metrix-lösenordet. T.ex.:
+0. skapa en mapp på skrivbordet: metrix
+
+1. Skapa en textfil (i mappen metrix) med två rader: ditt användarnamn till metrix, och metrix-lösenordet. T.ex.:
 
 august.bonds@protonmail.com
 mittmetrixlösenord
 
-2. Ladda ner dina UDisc-scorekort som .csv. I appen: "More" > Scorecards > Hamburger menu > Export to CSV
-  (öppna filen i excel eller något annat och titta hur ditt namn är skrivet, filen innehåller alla de du spelat med också)
+2. Ladda ner dina UDisc-scorekort som .csv. I appen: "More" > Scorecards > Hamburger menu > Export to CSV.
+Dela den till din dator via mail eller annat sätt och lägg den i mappen metrix.
 
-3. skapa en mapp "metrix" på t.ex. ditt skrivbord där du sätter
+3. sätt metrix-cli.exe från zip-filen i mappen.
+
+4. Nu ska mappen på skrivbordet ha:
   a) metrix-cli.exe (programmet som laddar upp dina resultat till Metrix)
   b) din lösenordsfil (t.ex. userpass.txt)
   c) dina scorecort som CSV (t.ex. "UDisc Scorecards.csv")
+  (öppna .csv-filen i excel eller något annat och titta hur ditt namn är skrivet, filen innehåller alla de du spelat med också. I mitt fall var det "August Bonds")
 
-4. Öppna powershell (tryck på windowsknappen för att söka, och skriv PowerShell så borde programmet dyka upp)
+5. Öppna powershell (tryck på windowsknappen för att söka, och skriv PowerShell så borde programmet dyka upp)
 
-5. navigera till din mapp på skrivbordet:
+6. navigera till din mapp på skrivbordet:
   cd Desktop\metrix
 
-6. Kör programmet i "torrt läge" för att kolla att allt funkar.
-  ./metrix-cli --password-file userpass.txt --udisc-csv "UDisc Scorecards.csv" --player-name "Ditt Namn Från csv filen" --dry-run
+7. Kör programmet i "torrt läge" för att kolla att allt funkar.
+  ./metrix-cli --password-file userpass.txt --udisc-csv "UDisc Scorecards.csv" --player-name "<Ditt Namn Från csv filen>" --dry-run
 
 Om outputen ser ut något sånt här, är det dags att köra på riktigt.
 Kontrollera specifikt att antalet rundor verkar stämma, och att player_name är ditt namn!
+Det kan vara många rader så du får scrolla upp lite.
 
-./metrix-cli --password-file userpass.txt --udisc-csv "UDisc Scorecards.csv" --player-name "August Bonds" --dry-run
+./metrix-cli --password-file userpass.txt --udisc-csv "UDisc Scorecards.csv" --player-name "<Ditt Namn Från csv filen>" --dry-run
 307 scorecards matching player August Bonds
 Skipping 0 first scorecards
 Skipped UDiscScorecard { player_name: "August Bonds", course_name: "Vesterkalmare", layout_name: "Main", date: "2022-05-22 11:51", total: 75, plus_minus: Some(7), hole1: Some(3), hole2: Some(3), hole3: Some(4), hole4: Some(3), hole5: Some(5), hole6: Some(5), hole7: Some(4), hole8: Some(3), hole9: Some(3), hole10: Some(3), hole11: Some(7), hole12: Some(5), hole13: Some(3), hole14: Some(7), hole15: Some(3), hole16: Some(7), hole17: Some(3), hole18: Some(4) }
@@ -35,10 +41,10 @@ DRY: imported scorecard UDiscScorecard { player_name: "August Bonds", course_nam
 DRY: imported scorecard UDiscScorecard { player_name: "August Bonds", course_name: "Kastelholm DiscGolfPark", layout_name: "Kastelholm", date: "2022-04-27 16:29", total: 29, plus_minus: Some(2), hole1: Some(4), hole2: Some(3), hole3: Some(3), hole4: Some(3), hole5: Some(3), hole6: Some(3), hole7: Some(2), hole8: Some(5), hole9: Some(3), hole10: None, hole11: None, hole12: None, hole13: None, hole14: None, hole15: None, hole16: None, hole17: None, hole18: None }
 ...
 
-7. Kör programmet på riktigt. Det kommer ladda upp en runda i taget med fyra sekunders mellanrum, så det tar en stund att bli klar.
-  ./metrix-cli --password-file userpass.txt --udisc-csv "UDisc Scorecards.csv" --player-name "Ditt Namn Från csv filen" --limit 10
+8. Kör programmet på riktigt. Det kommer ladda upp en runda i taget med 4 sekunders mellanrum, så det tar en stund att bli klar.
+  ./metrix-cli --password-file userpass.txt --udisc-csv "UDisc Scorecards.csv" --player-name "<Ditt Namn Från csv filen>"
 
-programargumenten --skip och --limit kan användas för att styra vilka och hur många rundor som ska laddas upp.
+programargumenten --skip <antal> och --limit <antal> kan användas för att styra vilka och hur många rundor som ska laddas upp.
 Om programmet hakar upp sig, kan du stoppa det med ctrl+c, och sedan kolla på https://discgolfmetrix.com/ax100 hur många rundor som kommit in.
 Om du är tvungen att starta om, starta då om med --skip 123 där 123 är antalet rundor du fått in på ax100-listan så att programmet inte lägger in dem igen.
 
